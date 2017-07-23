@@ -30,7 +30,6 @@ There are quite a few tools that can be used to install packages in Debian-based
 **synaptic** - a GTK-based (graphical) front-end to APT. A user-friendly interface for APT 
 
 
-
 ## Basic Commands
 
 Many users will be able to run the following commands and not need to know much else:
@@ -41,8 +40,6 @@ Many users will be able to run the following commands and not need to know much 
 
 `sudo apt-get update`
 
-
-
 `sudo apt-get upgrade`
 
 `sudo apt-get dist-upgrade`
@@ -52,13 +49,54 @@ Many users will be able to run the following commands and not need to know much 
 `apt-cache search <query>`
 
 
+## upgrade vs dist-upgrade
+* If a new version of a package needs a new dependency, `apt-get dist-upgrade` will upgrade and install the dependency, `apt-get upgrade` won't.
+
+* If a new version of a package conflicts with an already installed package, `apt-get dist-upgrade` may remove the conflicting package and upgrade the other, `apt-get upgrade` won't.
+
+* `apt-get update` will NEVER remove or install a new package. If a package update requires a new package the update will be held back by `apt-get update`
+
+
 ## Searching for Packages
 
-## Finding new packages
+### Search Repos
+use `apt-cache search` 
+
+### Search for packages already installed
+there are several ways to do this. 
+
+`dpkg -l | grep <package name>`
+`apt list --installed` (In Ubuntu 14.04 and above)
 
 
-## Diving Deeper into Packages
+## Diving Deeper into a package
 
+### Package details
+Use `apt-cache show` to get details about a package in the repositories
+
+You can use `dpkg -s <packagename>` to get the status of a package
+
+### Find what package a file belongs to
+`dpkg -S <filename>`
+
+
+### Exploring /etc/apt/sources.list
+
+## Anatomy of a repo source line
+`deb http://us.archive.ubuntu.com/ubuntu/ yakkety main restricted`
+
+`deb` - Archive type. This can be `deb` of `deb-src`. `deb` sources contain binary packages. `deb-src` sources contain source code packages
+
+`http://us.archive.ubuntu.com/ubuntu/` - URL to retrieve the packages from
+
+`yakkety` - distribution name. In this case "yakkety" is a release code name for the Ubuntu release. But this can be the release code name OR the release class. Ubuntu doesn't really use release class names like Debian does. Examples for Debian ("stable", "testing", "unstable")
+
+
+
+
+# Housekeeping
+
+`apt-get autoremove` - Apt handles dependencies for you when installing a package. But sometimes, dependencies change. If a package you have installed no longer requires a dependency it once did `apt-get autoremove` will remove it. It will NEVER remove a package you installed via `apt-get install`. If there is a package you want to keep that was installed as a dependency you can `apt-mark` it as being installed manually.
 
 
 ## Resources
@@ -70,3 +108,5 @@ APT Debian Documentation [[https://www.debian.org/doc/user-manuals#apt-howto](ht
 APT History [[https://en.wikipedia.org/wiki/APT_(Debian)#History](https://en.wikipedia.org/wiki/APT_\(Debian\)#History)]
 
 dpkg [[https://en.wikipedia.org/wiki/Dpkg](https://en.wikipedia.org/wiki/Dpkg)]
+
+Sources List [[https://wiki.debian.org/SourcesList](https://wiki.debian.org/SourcesList)]
